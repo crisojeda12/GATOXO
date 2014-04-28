@@ -92,24 +92,24 @@ class Etapa_actual
   end
 end
 
-class GameTree
+class GatoArbol
   def generate(ini)
-    initial_valor_pos = Etapa_actual.new(ini, Array.new(9))
-    generate_movimiento(initial_valor_pos)
-    initial_valor_pos
+    val_ini_pos = Etapa_actual.new(ini, Array.new(9))
+    nuevo_mov(val_ini_pos)
+    val_ini_pos
   end
 
-  def generate_movimiento(valor_pos)
-    next_player = (valor_pos.jugador_actual == 'X' ? 'O' : 'X')
-    valor_pos.tablero.each_with_index do |player_at_position, position|
-      if !player_at_position
-      #unless player_at_position
-        next_tablero = valor_pos.tablero.dup
-        next_tablero[position] = valor_pos.jugador_actual
+  def nuevo_mov(valor_pos)
+    siguiente_jugador = (valor_pos.jugador_actual == 'X' ? 'O' : 'X')
+    valor_pos.tablero.each_with_index do |jugador_pos, posicion|
+      if !jugador_pos
+      #unless jugador_pos
+        sig_tablero = valor_pos.tablero.dup
+        sig_tablero[posicion] = valor_pos.jugador_actual
 
-        next_valor_pos = Etapa_actual.new(next_player, next_tablero)
-        valor_pos.movimiento << next_valor_pos
-        generate_movimiento(next_valor_pos)
+        sig_valor_pos = Etapa_actual.new(siguiente_jugador, sig_tablero)
+        valor_pos.movimiento << sig_valor_pos
+        nuevo_mov(sig_valor_pos)
       end
     end
   end
@@ -120,10 +120,10 @@ class Gato
     puts "Modo de Juego: \n Pulsa 1 para iniciar primero \n Pulsa otra tecla para que la maquina inicie"
       @ans = gets#obtiene lo que el usuario teclea
       if @ans.downcase.strip == '1'
-         @valor_pos = @initial_valor_pos = GameTree.new.generate("O")
+         @valor_pos = @val_ini_pos = GatoArbol.new.generate("O")
          pinta_tablero
       else
-         @valor_pos = @initial_valor_pos = GameTree.new.generate("X")
+         @valor_pos = @val_ini_pos = GatoArbol.new.generate("X")
       end
   end
 
@@ -133,7 +133,7 @@ class Gato
       puts "¿Quieres Intentar nuevamente? s/n"
       aux1 = gets#obtiene lo que el usuario teclea
       if aux1.downcase.strip == 's'
-        @valor_pos = @initial_valor_pos
+        @valor_pos = @val_ini_pos
          if(@ans.strip == '1')
           pinta_tablero
           movimiento_jugador
